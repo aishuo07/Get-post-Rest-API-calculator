@@ -1,22 +1,38 @@
 import flask
-from flask import request,jsonify,render_template
+from flask import request,jsonify
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
-@app.route('/')
-def main():
-    return render_template("calculator.html")
-@app.route('/calculated', methods=['POST'])
-def calculated():
-    a=int(request.form['a'])
-    b=int(request.form['b'])
-    if(op=='+'):
-        return jsonify({'result is': a+b})
-    elif(op=='*'):
-        return jsonify({'result is'    op=str(request.form['op'])
-: a * b})
+
+@app.route('/calc', methods=['GET','POST'])
+def home():
+    if(flask.request.method=='GET'):
+        a=int(request.args.get('value1'))
+        b=int(request.args.get('value2'))
+        op=str(request.args.get('operation'))
+        if(op==' '):
+            return jsonify({'result is': a+b})
+        elif(op=='*'):
+            return jsonify({'result is': a * b})
+        elif (op == '-'):
+            return jsonify({'result is': a - b})
+        else:
+            return jsonify({'result is': "not a valid input"})
+    if(flask.request.method=='POST'):
+        a=int(request.form['value1'])
+        b=int(request.form['value2'])
+        op=str(request.form['operation'])
+        if(op=='+'):
+            return jsonify({'result is': a+b})
+        elif(op=='*'):
+            return jsonify({'result is': a * b})
+        elif(op=='-'):
+            return jsonify({'result is': a - b})
+        else:
+            return jsonify({'result is': "not a valid input"})
     else:
-        return jsonify({'result is': "not a valid input"})
+        return "<h1>Bad Request</h1>"
+
 
 
 if __name__ == '__main__':
